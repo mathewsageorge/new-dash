@@ -71,7 +71,7 @@
            <label for="attendanceDate">Select Date: </label>
            <input type="date" id="attendanceDate">
            <button onclick="displayAttendanceByDate()" class="secondary-button">Display Attendance</button>
-          <table class="table">
+          <table id="attendanceTable" class="table">
             <thead>
                     <tr>
                         <th onclick="sortTable(0)" style="position: relative;">Date <span class="sort-icon"></span></th>
@@ -163,12 +163,33 @@
       document.querySelector('.take-attendance-btn').style.display = 'none'; // hide take attendance button
     });
   
-    // Other link event listeners remain the same...
+   
     
     function takeAttendance() {
       // Redirect to the specified URL
       window.location.href = "https://keshav-lemon.vercel.app/";
     }
+
+    function displayAttendanceByDate() {
+    // Get the selected date from the input field
+    var selectedDate = new Date(document.getElementById("attendanceDate").value);
+
+    // Get all table rows
+    var rows = document.getElementById("attendanceTable").rows;
+
+    // Loop through rows and show/hide based on selected date
+    for (var i = 1; i < rows.length; i++) {
+        var dateCell = new Date(rows[i].getElementsByTagName("TD")[0].innerText);
+
+        // Compare the dates with the same precision (ignoring time)
+        if (dateCell.toDateString() === selectedDate.toDateString()) {
+            rows[i].style.display = "";
+        } else {
+            rows[i].style.display = "none";
+        }
+    }
+}
+
   
     function logout() {
       // Redirect to the login page or any other action you want to perform on logout
