@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>NFC ATTENDANCE</title>
+  <link rel="stylesheet" href="css/styles.css" />
+  <!-- Font Awesome Cdn Link -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"/>
+  <style>
+    /* Additional CSS can go here */
+  </style>
+</head>
+<body>
+  <div class="container">
+    <nav>
+      <ul>
+        <li><a href="#" class="logo">
+          <img src="images/nfc-icon-31.png">
+          <span class="nav-item">Dashboard</span>
+        </a></li>
+        <li><a href="#" id="dashboard-link">
+          <i class="fas fa-menorah"></i>
+          <span class="nav-item">Dashboard</span>
+        </a></li>
+        <!-- Remove the Message tab -->
+        <li style="display: none;"><a href="#">
+          <i class="fas fa-comment"></i>
+          <span class="nav-item">Message</span>
+        </a></li>
+        <li><a href="#" id="report-link">
+          <i class="fas fa-file-alt"></i>
+          <span class="nav-item">Report</span>
+        </a></li>
+        <li><a href="#" id="attendance-link">
+          <i class="fas fa-chart-bar"></i>
+          <span class="nav-item">View Attendance</span>
+        </a></li>
+        <li><a href="#" id="settings-link">
+          <i class="fas fa-cog"></i>
+          <span class="nav-item">Setting</span>
+        </a></li>
+        <li><a href="#" class="logout" id="logout-link">
+          <i onclick="logout()" class="fas fa-sign-out-alt"></i>
+          <span>  <button onclick="logout()" class="nav-item">Log out</button></span>
+        </a></li>
+      </ul>
+    </nav>
+
+
+    <section class="main">
+      <div class="main-top">
+        <h1>Welcome to Dashboard</h1>
+        <i class="fas fa-user-cog"></i>
+      </div>
+
+      <div id="welcome" class="tabcontent">
+        <!-- Welcome content with button for taking attendance -->
+        <div class="welcome-message" style="display: block;">
+            <h3 style="color: #55c57a;">Welcome <%= username %>!</h3>
+            <p>Welcome to your dashboard! Explore the tabs to manage your tasks, view attendance, and update your profile.</p>
+        </div><br>
+        
+        <button onclick="takeAttendance()" class="secondary-button take-attendance-btn" style="display: block;">Take Attendance</button>
+      </div>
+
+      <section class="attendance" style="display:none;">
+        <!-- Attendance content -->
+        <div class="attendance-list">
+          <h1>Attendance List</h1>
+           <!-- Button to select date -->
+           <label for="attendanceDate">Select Date: </label>
+           <input type="date" id="attendanceDate">
+           <button onclick="displayAttendanceByDate()" class="secondary-button">Display Attendance</button>
+          <table class="table">
+            <thead>
+                    <tr>
+                        <th onclick="sortTable(0)" style="position: relative;">Date <span class="sort-icon"></span></th>
+                        <th onclick="sortTable(1)" style="position: relative;">Time <span class="sort-icon"></span></th>
+                        <th onclick="sortTable(2)" style="position: relative;">Student Name <span class="sort-icon"></span></th>
+                        <th onclick="sortTable(3)" style="position: relative;">Attendance Status <span class="sort-icon"></span></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% attendanceData.forEach(data => { %>
+                        <tr>
+                            <!-- Displaying date -->
+                            <td><%= data.time.toDateString() %></td>
+                            <!-- Displaying time -->
+                            <td><%= data.time.toLocaleTimeString() %></td>
+                            <td><%= data.studentName %></td>
+                            <td><%= data.logData %></td>
+                        </tr>
+                    <% }); %>
+                </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="report" style="display:none;">
+        <!-- Report content -->
+        <div class="report-list">
+          <h1></h1>
+          <!-- Add your report content here -->
+          <p>This is a sample report.</p>
+        </div>
+      </section>
+
+      <section class="setting" style="display:none;">
+        <!-- Setting content -->
+        <div class="setting-content">
+          <h1></h1>
+          <!-- Add your settings content here -->
+          <p>This is a sample settings page.</p>
+        </div>
+      </section>
+    </section>
+  </div>
+
+  <script>
+    // JavaScript code to handle navigation link clicks
+    document.getElementById('dashboard-link').addEventListener('click', function(event) {
+      event.preventDefault();
+      document.querySelector('.main-top h1').innerText = 'Welcome to Dashboard';
+      document.querySelector('.attendance').style.display = 'none'; // hide attendance section
+      document.querySelector('.report').style.display = 'none'; // hide report section
+      document.querySelector('.setting').style.display = 'none'; // hide setting section
+      document.getElementById('welcome').style.display = 'block'; // show welcome section
+      document.querySelector('.welcome-message').style.display = 'block'; // show welcome message
+      document.querySelector('.take-attendance-btn').style.display = 'block'; // show take attendance button
+    });
+  
+    document.getElementById('report-link').addEventListener('click', function(event) {
+      event.preventDefault();
+      document.querySelector('.main-top h1').innerText = 'Report';
+      document.querySelector('.attendance').style.display = 'none'; // hide attendance section
+      document.querySelector('.report').style.display = 'block'; // show report section
+      document.querySelector('.setting').style.display = 'none'; // hide setting section
+      document.getElementById('welcome').style.display = 'none'; // hide welcome section
+      document.querySelector('.welcome-message').style.display = 'none'; // hide welcome message
+      document.querySelector('.take-attendance-btn').style.display = 'none'; // hide take attendance button
+      // You can add code here to generate the report content
+    });
+  
+    document.getElementById('attendance-link').addEventListener('click', function(event) {
+      event.preventDefault();
+      document.querySelector('.main-top h1').innerText = 'Attendance';
+      document.querySelector('.attendance').style.display = 'block'; // display attendance section
+      document.querySelector('.report').style.display = 'none'; // hide report section
+      document.querySelector('.setting').style.display = 'none'; // hide setting section
+      document.getElementById('welcome').style.display = 'none'; // hide welcome section
+      document.querySelector('.welcome-message').style.display = 'none'; // hide welcome message
+      document.querySelector('.take-attendance-btn').style.display = 'none'; // hide take attendance button
+    });
+
+    document.getElementById('settings-link').addEventListener('click', function(event) {
+      event.preventDefault();
+      document.querySelector('.main-top h1').innerText = 'Settings';
+      document.querySelector('.attendance').style.display = 'none'; // hide attendance section
+      document.querySelector('.report').style.display = 'none'; // hide report section
+      document.querySelector('.setting').style.display = 'block'; // show setting section
+      document.getElementById('welcome').style.display = 'none'; // hide welcome section
+      document.querySelector('.welcome-message').style.display = 'none'; // hide welcome message
+      document.querySelector('.take-attendance-btn').style.display = 'none'; // hide take attendance button
+    });
+  
+    // Other link event listeners remain the same...
+    
+    function takeAttendance() {
+      // Redirect to the specified URL
+      window.location.href = "https://keshav-lemon.vercel.app/";
+    }
+  
+    function logout() {
+      // Redirect to the login page or any other action you want to perform on logout
+      window.location.href = "/"; // Assuming your login page is served at the root URL
+    }
+  </script>
+</body>
+</html>
